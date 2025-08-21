@@ -22,7 +22,7 @@ func NewServer(addr string) *Server {
 
 func (s *Server) Run() error {
 	config.ConnectDB()
-	err := config.DB.AutoMigrate(&models.Favorite{}, &models.Customer{})
+	err := config.DB.AutoMigrate(models.Customer{})
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error migrating database: %v", err))
 	}
@@ -55,7 +55,7 @@ func main() {
 		port = "8080"
 	}
 
-	server := NewServer(":8080")
+	server := NewServer(":" + port)
 	err := server.Run()
 	if err != nil {
 		log.Fatalf("Failed to run server: %v", err)

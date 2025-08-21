@@ -1,6 +1,11 @@
 package database
 
-import "reflect"
+import (
+	"fmt"
+	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/infrastructure/database/models"
+	"reflect"
+)
 
 type RepositoryInterface interface {
 	Create(model Model) (Model, error)
@@ -8,12 +13,15 @@ type RepositoryInterface interface {
 	Delete(id uint) error
 	Update(model Model) (Model, error)
 }
+type Models struct {
+	models.Customer
+}
 
 type Repository struct {
 }
 
 func (r *Repository) Create(m *Model) error {
-	var model = NewModelByTypeName(reflect.TypeOf(m).Name(), Models{})
+	var model, _ = NewModelByTypeName(reflect.TypeOf(m).Name(), Models{})
 
 	err := HydrateModel(entity, &product)
 	if err != nil {

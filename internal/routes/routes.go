@@ -2,20 +2,16 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/redis/go-redis/v9"
 	"github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
-	"github.com/vinihss/bodego-api/internal/infrastructure/external_epis"
 	http_interfaces_authentication "github.com/vinihss/bodego-api/internal/interfaces/http/authentcation"
 	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
-	favoriteuse "github.com/vinihss/bodego-api/internal/usecases/favorite"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	_ "github.com/vinihss/bodego-api/docs"
 	"github.com/vinihss/bodego-api/internal/interfaces/http/customer"
-	"github.com/vinihss/bodego-api/internal/interfaces/http/favorite"
 	"github.com/vinihss/bodego-api/middlewares"
 )
 
@@ -30,19 +26,6 @@ func SetupRoutes(router *gin.Engine) {
 	authorized := router.Group("/")
 	authorized.Use(middlewares.JWTAuth())
 	{
-		productClient := external_epis.NewFakeStoreClient()
-		rdb := redis.NewClient(&redis.Options{
-			Addr:     "redis:6379",
-			Password: "",
-			DB:       0,
-		})
-		favRepo := repositories.NewFavoriteRepository(db, rdb)
-		createFavoriteUC := favoriteuse.NewAddFavoriteUseCase(favRepo, productClient)
-		listFavoriteUC := favoriteuse.NewListFavoritesUseCase(favRepo)
-		removeFavoriteUC := favoriteuse.NewRemoveFavoriteUseCase(favRepo)
-		favController := http_interfaces_favorite.NewFavoriteController(createFavoriteUC, listFavoriteUC, removeFavoriteUC)
-		favHandler := http_interfaces_favorite.NewFavoriteHandler(favController)
-		RegisterFavoriteRoutes(router, favHandler)
 
 		custRepo := repositories.NewCustomerRepository(db)
 		createCustomerUC := customeruse.NewCreateCustomerUseCase(custRepo)
