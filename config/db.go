@@ -27,7 +27,7 @@ func (dbConfig *DatabaseConfig) GetDSN() string {
 }
 
 func ConnectDB() {
-	dsn := "host=postgres user=postgres password=postgres dbname=favorites port=5432 sslmode=disable"
+	dsn := "host=postgres user=postgres password=postgres dbname=bodego port=5432 sslmode=disable"
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

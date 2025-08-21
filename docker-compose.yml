@@ -1,29 +1,29 @@
 services:
   postgres:
     image: postgres:15
-    container_name: favorite-db
+    container_name: bodego-db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: favorites
+      POSTGRES_DB: bodegos
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - favorite-net
+      - bodego-net
   redis:
     image: redis:7
     ports:
       - "6379:6379"
-  favorites:
+  bodegos:
     build: .
     depends_on:
       - postgres
       - redis
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/favorites?sslmode=disable
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/bodego?sslmode=disable
       - REDIS_ADDR=redis:6379
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
       - PRODUCT_SERVICE_URL=http://product-service:8080
@@ -33,9 +33,9 @@ services:
     volumes:
       - .:/app
     networks:
-      - favorite-net
+      - bodego-net
 volumes:
   pgdata:
 
 networks:
-  favorite-net:
+  bodego-net:
