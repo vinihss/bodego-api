@@ -21,7 +21,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	authController := http_interfaces_authentication.NewAuthenticationController()
 	router.POST("/authenticate", http_interfaces_authentication.NewAuthenticationHandler(authController).Authenticate)
-	db, _ := gorm.Open(postgres.Open("host=dpg-d2jbkfbuibrs73defhq0-a user=postgres password=6REY3Hz6IzIODENTegTSiaac7zkAOL5u dbname=bodego port=5432 sslmode=disable"), &gorm.Config{})
+	db, _ := gorm.Open(postgres.Open("host=dpg-d2jbkfbuibrs73defhq0-a user=posgres password=6REY3Hz6IzIODENTegTSiaac7zkAOL5u dbname=bodego port=5432 sslmode=disable"), &gorm.Config{})
 
 	authorized := router.Group("/")
 	authorized.Use(middlewares.JWTAuth())
