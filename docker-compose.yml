@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: bodegos
+      POSTGRES_DB: bodego
     ports:
       - "5432:5432"
     volumes:
@@ -17,7 +17,7 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
-  bodegos:
+  bodego:
     build: .
     depends_on:
       - postgres
