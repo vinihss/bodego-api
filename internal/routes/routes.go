@@ -15,7 +15,6 @@ import (
 	"github.com/vinihss/bodego-api/middlewares"
 )
 
-// SetupRoutes @title Aiqfome API
 func SetupRoutes(router *gin.Engine) {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

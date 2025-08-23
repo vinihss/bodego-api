@@ -1,76 +1,44 @@
-# Serviço de Favoritos
+# Bodego API
 
-Microserviço responsável por gerenciar produtos favoritos dos clientes, com alta disponibilidade e performance.
+A Go-based REST API for managing products and customers.
 
-## Funcionalidades
-- Adicionar produtos aos favoritos
-- Adicionar produtos aos favoritos
-- Listar produtos favoritos com detalhes (ID, título, imagem, preço e review)
-- Remover produtos dos favoritos
-- Cache distribuído para alta performance
+## Architecture
 
-## Tecnologias
+The project follows Clean Architecture principles with the following layers:
 
-- Go 1.24
-- PostgreSQL
-- Redis
-- Docker & Docker Compose
+- Domain: Core business entities and interfaces
+- Use Cases: Application business rules and use case implementations
+- Infrastructure: External interfaces implementations (not shown in current codebase)
 
-## Requisitos
+## Domain Entities
 
-- Go 1.24+
-- Docker & Docker Compose
-- Make
+### Customer
 
-## Como Utilizar
-- Subir os containers da aplicação
-```
-docker-composer up -d
-```
-- A documentação estará disponível em: http://localhost:8080/swagger/index.html
-- Realizar autenticão no endpoint authenticate. Os parametros são apenas demostrativos, e irá retornar um token de deve ser utilizado nos demais endpoins.
-```
-{
-  "email": "string",
-  "name": "string"
-}
-```
-- Utilizar o token no header da seguinte maneira:
-```
-Bearer <token>
-```
-## Estrutura do Projeto
+- ID (uint)
+- Name (string)
+- Email (string)
 
-```
-.
-├── cmd/           # Pontos de entrada da aplicação
-├── config/        # Configurações
-├── docs/          # Documentação (Swagger)
-├── internal/      # Código interno da aplicação
-│   ├── domain/    # Modelos de domínio
-│   ├── infrastructure/  # Implementações concretas
-│   ├── interfaces/      # Adaptadores HTTP
-│   ├── routes/          # Rotas da API
-│   └── usecases/        # Casos de uso da aplicação
-├── middlewares/   # Middlewares HTTP
-└── services/      # Serviços auxiliares
-```
+### Product
 
-## APIs
+- ID (uint)
+- Name (string)
+- Price (float64)
+- Description (string)
 
-A documentação completa das APIs está disponível via Swagger em `/docs/swagger.json` ou acessando `/swagger/index.html` quando a aplicação estiver em execução.
+## Use Cases
 
-Rotas principais:
+### Customer
 
-- `GET /customer/{id}/favorites` - Lista produtos favoritos
-- `POST /customer/{id}/favorites` - Adiciona produto aos favoritos
-- `DELETE /customer/{id}/favorites/{productId}` - Remove produto dos favoritos
+- Create: Creates a new customer
+- Delete: Removes a customer by ID
+- Find: Retrieves a customer by ID
+- Update: Updates customer information
+- FindAll: Lists all customers with pagination
 
+### Product
 
-## Escalabilidade e Alta Disponibilidade
-
-Este serviço foi projetado para:
-
-- Escalar horizontalmente (múltiplas instâncias)
-- Utilizar cache distribuído (Redis)
-- Implementar circuit breaker para API externa
+- Create: Creates a new product
+- Delete: Removes a product by ID
+- Find: Retrieves a product by ID
+- Update: Updates product information
+- FindAll: Lists all products with pagination
