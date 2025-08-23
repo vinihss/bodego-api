@@ -1,13 +1,14 @@
 GOCMD = go
+SWAG = swag
 
 build:
-	go build -o bin/main cmd/server/main.go
+	$(GOCMD) build -o bin/main cmd/server/main.go
 
 run:
-	go run cmd/server/main.go
+	$(GOCMD) run cmd/server/main.go
 
-docs:
-	swag init --dir=cmd/server,internal
+swagger:
+	$(SWAG) init --dir=cmd/server,internal/interfaces/http
 
 # Run linters and checks
 vet:

@@ -4,6 +4,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"os"
 )
 
 var DB *gorm.DB
@@ -27,7 +28,22 @@ func (dbConfig *DatabaseConfig) GetDSN() string {
 }
 
 func ConnectDB() {
-	dsn := "host=dpg-d2jbkfbuibrs73defhq0-a user=posgres password=6REY3Hz6IzIODENTegTSiaac7zkAOL5u dbname=bodego port=5432 sslmode=disable"
+	// Obtendo valores das variáveis de ambiente
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	sslMode := os.Getenv("DB_SSLMODE")
+
+	// Construindo o DSN dinamicamente
+	dsn := "host=" + host +
+		" port=" + port +
+		" user=" + user +
+		" password=" + password +
+		" dbname=" + dbName +
+		" sslmode=" + sslMode
+
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
