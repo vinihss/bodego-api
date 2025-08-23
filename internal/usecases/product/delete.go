@@ -1,14 +1,14 @@
-package customer
+package product
 
-type DeleteCustomerUseCase struct {
-	repo CustomerRepository
+type DeleteProductUseCase struct {
+	repo ProductRepository
 }
 
-func NewDeleteCustomerUseCase(repo CustomerRepository) *DeleteCustomerUseCase {
-	return &DeleteCustomerUseCase{repo: repo}
+func NewDeleteProductUseCase(repo ProductRepository) *DeleteProductUseCase {
+	return &DeleteProductUseCase{repo: repo}
 }
 
-func (uc *DeleteCustomerUseCase) Execute(id uint) error {
+func (uc *DeleteProductUseCase) Execute(id uint) error {
 	entity, err := uc.repo.FindByID(id)
 	if err != nil {
 		return err

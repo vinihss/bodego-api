@@ -1,18 +1,18 @@
-package customer
+package tab
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/domain/tab"
 )
 
-type FindCustomerUseCase struct {
-	repo CustomerRepository
+type FindTabUseCase struct {
+	repo TabRepository
 }
 
-func NewFindCustomerUseCase(repo CustomerRepository) *FindCustomerUseCase {
-	return &FindCustomerUseCase{repo: repo}
+func NewFindTabUseCase(repo TabRepository) *FindTabUseCase {
+	return &FindTabUseCase{repo: repo}
 }
 
-func (uc *FindCustomerUseCase) Execute(id uint) (customer.Customer, error) {
+func (uc *FindTabUseCase) Execute(id uint) (tab.Tab, error) {
 	entity, err := uc.repo.FindByID(id)
 	if err != nil {
 		return entity, err
@@ -20,11 +20,11 @@ func (uc *FindCustomerUseCase) Execute(id uint) (customer.Customer, error) {
 	return entity, nil
 }
 
-func (uc *FindCustomerUseCase) ExecuteAll(page, size int) ([]customer.Customer, error) {
+func (uc *FindTabUseCase) ExecuteAll(page, size int) ([]tab.Tab, error) {
 	offset := (page - 1) * size
-	customers, err := uc.repo.FindAll(offset, size)
+	tabs, err := uc.repo.FindAll(offset, size)
 	if err != nil {
 		return nil, err
 	}
-	return customers, nil
+	return tabs, nil
 }

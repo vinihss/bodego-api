@@ -1,32 +1,32 @@
-package customer
+package tab
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/domain/tab"
 )
 
-type CustomerRepository interface {
-	Create(entity customer.Customer) (customer.Customer, error)
+type TabRepository interface {
+	Create(entity tab.Tab) (tab.Tab, error)
 	Delete(id uint) error
-	FindByID(id uint) (customer.Customer, error)
-	Update(entity customer.Customer) (customer.Customer, error)
-	FindAll(int, size int) ([]customer.Customer, error)
+	FindByID(id uint) (tab.Tab, error)
+	Update(entity tab.Tab) (tab.Tab, error)
+	FindAll(int, size int) ([]tab.Tab, error)
 }
 
-type CreateCustomerInput struct {
+type CreateTabInput struct {
 	Name  string
 	Email string
 }
 
-type CreateCustomerUseCase struct {
-	repo CustomerRepository
+type CreateTabUseCase struct {
+	repo TabRepository
 }
 
-func NewCreateCustomerUseCase(repo CustomerRepository) *CreateCustomerUseCase {
-	return &CreateCustomerUseCase{repo: repo}
+func NewCreateTabUseCase(repo TabRepository) *CreateTabUseCase {
+	return &CreateTabUseCase{repo: repo}
 }
 
-func (uc *CreateCustomerUseCase) Execute(input CreateCustomerInput) (customer.Customer, error) {
-	fav := customer.Customer{
+func (uc *CreateTabUseCase) Execute(input CreateTabInput) (tab.Tab, error) {
+	fav := tab.Tab{
 		Name:  input.Name,
 		Email: input.Email,
 	}

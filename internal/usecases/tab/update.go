@@ -1,24 +1,24 @@
-package customer
+package tab
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/domain/tab"
 )
 
-type UpdateCustomerUseCase struct {
-	repo CustomerRepository
+type UpdateTabUseCase struct {
+	repo TabRepository
 }
-type UpdateCustomerInput struct {
+type UpdateTabInput struct {
 	ID    uint
 	Name  string
 	Email string
 }
 
-func NewUpdateCustomerUseCase(repo CustomerRepository) *UpdateCustomerUseCase {
-	return &UpdateCustomerUseCase{repo: repo}
+func NewUpdateTabUseCase(repo TabRepository) *UpdateTabUseCase {
+	return &UpdateTabUseCase{repo: repo}
 }
 
-func (uc *UpdateCustomerUseCase) Execute(input UpdateCustomerInput) (customer.Customer, error) {
-	fav := customer.Customer{
+func (uc *UpdateTabUseCase) Execute(input UpdateTabInput) (tab.Tab, error) {
+	fav := tab.Tab{
 		ID:    input.ID,
 		Name:  input.Name,
 		Email: input.Email,

@@ -1,28 +1,29 @@
-package customer
+package product
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain"
-	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/domain/product"
 )
 
-type UpdateCustomerUseCase struct {
-	repo CustomerRepository
+type UpdateProductUseCase struct {
+	repo ProductRepository
 }
-type UpdateCustomerInput struct {
-	ID    uint
-	Name  string
-	Email string
-}
-
-func NewUpdateCustomerUseCase(repo CustomerRepository) *UpdateCustomerUseCase {
-	return &UpdateCustomerUseCase{repo: repo}
+type UpdateProductInput struct {
+	ID          uint
+	Name        string
+	Price       float64
+	Description string
 }
 
-func (uc *UpdateCustomerUseCase) Execute(input UpdateCustomerInput) (domain.EntityInterface, error) {
-	fav := customer.Customer{
-		ID:    input.ID,
-		Name:  input.Name,
-		Email: input.Email,
+func NewUpdateProductUseCase(repo ProductRepository) *UpdateProductUseCase {
+	return &UpdateProductUseCase{repo: repo}
+}
+
+func (uc *UpdateProductUseCase) Execute(input UpdateProductInput) (product.Product, error) {
+	fav := product.Product{
+		ID:          input.ID,
+		Name:        input.Name,
+		Price:       input.Price,
+		Description: input.Description,
 	}
 	return uc.repo.Update(fav)
 }

@@ -1,35 +1,36 @@
-package customer
+package product
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain"
-	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/domain/product"
 )
 
-type CustomerRepository interface {
-	Create(entity domain.EntityInterface) (domain.EntityInterface, error)
+type ProductRepository interface {
+	Create(entity product.Product) (product.Product, error)
 	Delete(id uint) error
-	FindByID(id uint) (domain.EntityInterface, error)
-	Update(entity domain.EntityInterface) (domain.EntityInterface, error)
-	FindAll(int, size int) ([]domain.EntityInterface, error)
+	FindByID(id uint) (product.Product, error)
+	Update(entity product.Product) (product.Product, error)
+	FindAll(int, size int) ([]product.Product, error)
 }
 
-type CreateCustomerInput struct {
-	Name  string
-	Email string
+type CreateProductInput struct {
+	Name        string
+	Price       float64
+	Description string
 }
 
-type CreateCustomerUseCase struct {
-	repo CustomerRepository
+type CreateProductUseCase struct {
+	repo ProductRepository
 }
 
-func NewCreateCustomerUseCase(repo CustomerRepository) *CreateCustomerUseCase {
-	return &CreateCustomerUseCase{repo: repo}
+func NewCreateProductUseCase(repo ProductRepository) *CreateProductUseCase {
+	return &CreateProductUseCase{repo: repo}
 }
 
-func (uc *CreateCustomerUseCase) Execute(input CreateCustomerInput) (domain.EntityInterface, error) {
-	fav := customer.Customer{
-		Name:  input.Name,
-		Email: input.Email,
+func (uc *CreateProductUseCase) Execute(input CreateProductInput) (product.Product, error) {
+	fav := product.Product{
+		Name:        input.Name,
+		Price:       input.Price,
+		Description: input.Description,
 	}
 	return uc.repo.Create(fav)
 }

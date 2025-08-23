@@ -1,18 +1,18 @@
-package customer
+package product
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain"
+	"github.com/vinihss/bodego-api/internal/domain/product"
 )
 
-type FindCustomerUseCase struct {
-	repo CustomerRepository
+type FindProductUseCase struct {
+	repo ProductRepository
 }
 
-func NewFindCustomerUseCase(repo CustomerRepository) *FindCustomerUseCase {
-	return &FindCustomerUseCase{repo: repo}
+func NewFindProductUseCase(repo ProductRepository) *FindProductUseCase {
+	return &FindProductUseCase{repo: repo}
 }
 
-func (uc *FindCustomerUseCase) Execute(id uint) (domain.EntityInterface, error) {
+func (uc *FindProductUseCase) Execute(id uint) (product.Product, error) {
 	entity, err := uc.repo.FindByID(id)
 	if err != nil {
 		return entity, err
@@ -20,11 +20,11 @@ func (uc *FindCustomerUseCase) Execute(id uint) (domain.EntityInterface, error) 
 	return entity, nil
 }
 
-func (uc *FindCustomerUseCase) ExecuteAll(page, size int) ([]domain.EntityInterface, error) {
+func (uc *FindProductUseCase) ExecuteAll(page, size int) ([]product.Product, error) {
 	offset := (page - 1) * size
-	customers, err := uc.repo.FindAll(offset, size)
+	products, err := uc.repo.FindAll(offset, size)
 	if err != nil {
 		return nil, err
 	}
-	return customers, nil
+	return products, nil
 }
