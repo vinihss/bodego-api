@@ -7,11 +7,13 @@ import (
 	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
 	http_interfaces_authentication "github.com/vinihss/bodego-api/internal/interfaces/http/authentcation"
 	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
+	newsuse "github.com/vinihss/bodego-api/internal/usecases/news"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	_ "github.com/vinihss/bodego-api/docs"
 	"github.com/vinihss/bodego-api/internal/interfaces/http/customer"
+	"github.com/vinihss/bodego-api/internal/interfaces/http/news"
 	"github.com/vinihss/bodego-api/middlewares"
 )
 
@@ -35,6 +37,17 @@ func SetupRoutes(router *gin.Engine) {
 		custController := http_interfaces_customer.NewCustomerController(createCustomerUC, deleteCustomerUC, findCustomerUC, updateCustomerUC)
 		custHandler := http_interfaces_customer.NewCustomerHandler(custController)
 		RegisterCustomerRoutes(router, custHandler)
+
+		// News routes
+		newsRepo := repositories.NewNewsRepository(db)
+		createNewsUC := newsuse.NewCreateNewsUseCase(newsRepo)
+		deleteNewsUC := newsuse.NewDeleteNewsUseCase(newsRepo)
+		findNewsUC := newsuse.NewFindNewsUseCase(newsRepo)
+		updateNewsUC := newsuse.NewUpdateNewsUseCase(newsRepo)
+
+		newsController := http_interfaces_news.NewNewsController(createNewsUC, deleteNewsUC, findNewsUC, updateNewsUC)
+		newsHandler := http_interfaces_news.NewNewsHandler(newsController)
+		RegisterNewsRoutes(router, newsHandler)
 
 	}
 
