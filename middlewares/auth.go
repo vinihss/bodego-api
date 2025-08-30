@@ -24,15 +24,16 @@ func JWTAuth() gin.HandlerFunc {
 		}
 
 		tokenStr := parts[1]
-		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-			return secret, nil
-		})
+		   token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+			   return secret, nil
+		   })
 
-		if err != nil || !token.Valid {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-			return
-		}
+		   if err != nil || !token.Valid {
+			   c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			   return
+		   }
 
-		c.Next()
+		   c.Set("user", token)
+		   c.Next()
 	}
 }
