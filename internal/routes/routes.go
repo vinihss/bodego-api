@@ -7,7 +7,7 @@ import (
 	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
 	http_interfaces_authentication "github.com/vinihss/bodego-api/internal/interfaces/http/authentcation"
 	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
-	"github.com/vinihss/bodego-api/internal/usecases/user"
+	userUse "github.com/vinihss/bodego-api/internal/usecases/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -38,7 +38,7 @@ func SetupRoutes(router *gin.Engine) {
 
 		// User CRUD (apenas sysadmin)
 		userRepo := repositories.NewUserRepository(db)
-		userCreateUC := user.NewCreateUserUseCase(userRepo)
+		userCreateUC := userUse.NewCreateUserUseCase(userRepo)
 		userHandler := http_interfaces_user.NewHandler(userCreateUC)
 		userGroup := authorized.Group("")
 		userGroup.Use(middlewares.OnlySysAdmin())
