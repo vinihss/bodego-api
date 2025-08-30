@@ -38,7 +38,7 @@ func SetupRoutes(router *gin.Engine) {
 		custHandler := http_interfaces_customer.NewCustomerHandler(custController)
 		RegisterCustomerRoutes(router, custHandler)
 
-		// Tab routes  
+		// Tab routes
 		tabRepo := repositories.NewTabRepository(db)
 		openTabUC := tabuse.NewOpenTabUseCase(tabRepo)
 		closeTabUC := tabuse.NewCloseTabUseCase(tabRepo)
