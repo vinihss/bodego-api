@@ -1,11 +1,20 @@
 package http_interfaces_tab
 
-type CreateTabRequest struct {
-	Name  string `json:"name"  binding:"required,min=2,max=100"`
-	Email string `json:"email" binding:"required,email,max=254"`
+type OpenTabRequest struct {
+	UserID      uint   `json:"user_id" binding:"required"`
+	Description string `json:"description,omitempty"`
 }
 
 type UpdateTabRequest struct {
-	Name  string `json:"name"  binding:"omitempty,min=2,max=100"`
-	Email string `json:"email" binding:"omitempty,email,max=254"`
+	Description string `json:"description,omitempty"`
+}
+
+type CloseTabRequest struct {
+	// No additional fields needed - ID comes from URL path
+}
+
+// Legacy support - kept for backward compatibility
+type CreateTabRequest struct {
+	Name  string `json:"name"  binding:"required,min=2,max=100"`
+	Email string `json:"email" binding:"required,email,max=254"`
 }
