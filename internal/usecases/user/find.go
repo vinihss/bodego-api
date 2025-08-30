@@ -1,4 +1,4 @@
-package customer
+package user
 
 import (
 	"github.com/vinihss/bodego-api/internal/domain/customer"
