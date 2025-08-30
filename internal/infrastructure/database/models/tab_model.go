@@ -1,17 +1,18 @@
 package models
 
 import (
+	"time"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type Tab struct {
-	ID    uint `gorm:"primaryKey"`
-	Name  string
-	Email string `gorm:"uniqueIndex"`
-}
-
-func (c *Tab) BeforeSave(tx *gorm.DB) (err error) {
-	c.Email = strings.TrimSpace(strings.ToLower(c.Email))
-	return nil
+	ID          uint       `gorm:"primaryKey"`
+	UserID      uint       `gorm:"not null;index"`
+	OpenDate    time.Time  `gorm:"not null"`
+	CloseDate   *time.Time `gorm:"default:null"`
+	Description string     `gorm:"type:text"`
+	Status      string     `gorm:"type:varchar(20);not null;default:'open'"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
