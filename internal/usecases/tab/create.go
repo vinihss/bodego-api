@@ -1,9 +1,9 @@
 package tab
 
 import (
-	"time"
 	"errors"
 	"github.com/vinihss/bodego-api/internal/domain/tab"
+	"time"
 )
 
 type TabRepository interface {

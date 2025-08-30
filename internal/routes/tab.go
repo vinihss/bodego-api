@@ -9,7 +9,7 @@ import (
 func RegisterTabRoutes(r *gin.Engine, handler *httpTab.TabHandler) {
 	tabGroup := r.Group("/tab")
 	{
-		tabGroup.POST("/", handler.OpenTab)                               // Open new tab
+		tabGroup.POST("/", handler.OpenTab)                              // Open new tab
 		tabGroup.GET("/", handler.GetAllTabs)                            // Get all tabs (paginated)
 		tabGroup.GET("/:id", handler.FindByID)                           // Get tab by ID
 		tabGroup.PUT("/:id", handler.UpdateTab)                          // Update tab description
