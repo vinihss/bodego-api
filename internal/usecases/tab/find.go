@@ -28,3 +28,19 @@ func (uc *FindTabUseCase) ExecuteAll(page, size int) ([]tab.Tab, error) {
 	}
 	return tabs, nil
 }
+
+func (uc *FindTabUseCase) ExecuteByUserID(userID uint) ([]tab.Tab, error) {
+	tabs, err := uc.repo.FindByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return tabs, nil
+}
+
+func (uc *FindTabUseCase) ExecuteOpenTabsByUserID(userID uint) ([]tab.Tab, error) {
+	tabs, err := uc.repo.FindOpenTabsByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return tabs, nil
+}
