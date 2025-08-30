@@ -46,6 +46,41 @@ definitions:
         minLength: 2
         type: string
     type: object
+  http_interfaces_news.CreateNewsRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    required:
+    - name
+    - price
+    type: object
+  http_interfaces_news.NewsResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  http_interfaces_news.UpdateNewsRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    required:
+    - name
+    - price
+    type: object
   http_interfaces_product.CreateProductRequest:
     properties:
       description:
@@ -352,6 +387,198 @@ paths:
       summary: Update customer
       tags:
       - Customer
+  /news:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a paginated list of news items
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/http_interfaces_news.NewsResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all news items
+      tags:
+      - News
+    post:
+      consumes:
+      - application/json
+      description: Creates a news item
+      parameters:
+      - description: News data
+        in: body
+        name: news
+        required: true
+        schema:
+          $ref: '#/definitions/http_interfaces_news.CreateNewsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http_interfaces_news.NewsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Add news item
+      tags:
+      - News
+  /news/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a news item by ID
+      parameters:
+      - description: News ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete news item
+      tags:
+      - News
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a news item by ID
+      parameters:
+      - description: News ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http_interfaces_news.NewsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get news item by ID
+      tags:
+      - News
+    put:
+      consumes:
+      - application/json
+      description: Updates a news item by ID
+      parameters:
+      - description: News ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated news data
+        in: body
+        name: news
+        required: true
+        schema:
+          $ref: '#/definitions/http_interfaces_news.UpdateNewsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http_interfaces_news.NewsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update news item
+      tags:
+      - News
   /product:
     get:
       consumes:
