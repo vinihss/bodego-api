@@ -4,12 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/vinihss/bodego-api/config"
 	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
 	http_interfaces_authentication "github.com/vinihss/bodego-api/internal/interfaces/http/authentcation"
 	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
 	newsuse "github.com/vinihss/bodego-api/internal/usecases/news"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 
 	_ "github.com/vinihss/bodego-api/docs"
 	"github.com/vinihss/bodego-api/internal/interfaces/http/customer"
@@ -22,13 +21,12 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	authController := http_interfaces_authentication.NewAuthenticationController()
 	router.POST("/authenticate", http_interfaces_authentication.NewAuthenticationHandler(authController).Authenticate)
-	db, _ := gorm.Open(postgres.Open("host=dpg-d2jbkfbuibrs73defhq0-a user=posgres password=6REY3Hz6IzIODENTegTSiaac7zkAOL5u dbname=bodego port=5432 sslmode=disable"), &gorm.Config{})
 
 	authorized := router.Group("/")
 	authorized.Use(middlewares.JWTAuth())
 	{
 
-		custRepo := repositories.NewCustomerRepository(db)
+		custRepo := repositories.NewCustomerRepository(config.DB)
 		createCustomerUC := customeruse.NewCreateCustomerUseCase(custRepo)
 		deleteCustomerUC := customeruse.NewDeleteCustomerUseCase(custRepo)
 		findCustomerUC := customeruse.NewFindCustomerUseCase(custRepo)
@@ -39,7 +37,7 @@ func SetupRoutes(router *gin.Engine) {
 		RegisterCustomerRoutes(router, custHandler)
 
 		// News routes
-		newsRepo := repositories.NewNewsRepository(db)
+		newsRepo := repositories.NewNewsRepository(config.DB)
 		createNewsUC := newsuse.NewCreateNewsUseCase(newsRepo)
 		deleteNewsUC := newsuse.NewDeleteNewsUseCase(newsRepo)
 		findNewsUC := newsuse.NewFindNewsUseCase(newsRepo)
