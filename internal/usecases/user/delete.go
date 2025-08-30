@@ -1,4 +1,4 @@
-package customer
+package user
 
 type DeleteCustomerUseCase struct {
 	repo CustomerRepository
