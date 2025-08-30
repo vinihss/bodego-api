@@ -22,20 +22,26 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/authenticate", http_interfaces_authentication.NewAuthenticationHandler(authController).Authenticate)
 	db, _ := gorm.Open(postgres.Open("host=dpg-d2jbkfbuibrs73defhq0-a user=posgres password=6REY3Hz6IzIODENTegTSiaac7zkAOL5u dbname=bodego port=5432 sslmode=disable"), &gorm.Config{})
 
-	authorized := router.Group("/")
-	authorized.Use(middlewares.JWTAuth())
-	{
+       authorized := router.Group("/")
+       authorized.Use(middlewares.JWTAuth())
+       {
+	       custRepo := repositories.NewCustomerRepository(db)
+	       createCustomerUC := customeruse.NewCreateCustomerUseCase(custRepo)
+	       deleteCustomerUC := customeruse.NewDeleteCustomerUseCase(custRepo)
+	       findCustomerUC := customeruse.NewFindCustomerUseCase(custRepo)
+	       updateCustomerUC := customeruse.NewUpdateCustomerUseCase(custRepo)
 
-		custRepo := repositories.NewCustomerRepository(db)
-		createCustomerUC := customeruse.NewCreateCustomerUseCase(custRepo)
-		deleteCustomerUC := customeruse.NewDeleteCustomerUseCase(custRepo)
-		findCustomerUC := customeruse.NewFindCustomerUseCase(custRepo)
-		updateCustomerUC := customeruse.NewUpdateCustomerUseCase(custRepo)
+	       custController := http_interfaces_customer.NewCustomerController(createCustomerUC, deleteCustomerUC, findCustomerUC, updateCustomerUC)
+	       custHandler := http_interfaces_customer.NewCustomerHandler(custController)
+	       RegisterCustomerRoutes(router, custHandler)
 
-		custController := http_interfaces_customer.NewCustomerController(createCustomerUC, deleteCustomerUC, findCustomerUC, updateCustomerUC)
-		custHandler := http_interfaces_customer.NewCustomerHandler(custController)
-		RegisterCustomerRoutes(router, custHandler)
-
-	}
+	       // User CRUD (apenas sysadmin)
+	       userRepo := repositories.NewUserRepository(db)
+	       userCreateUC := user.NewCreateUserUseCase(userRepo)
+	       userHandler := http_interfaces_user.NewHandler(userCreateUC)
+	       userGroup := authorized.Group("")
+	       userGroup.Use(middlewares.OnlySysAdmin())
+	       http_interfaces_user.RegisterUserRoutes(userGroup, userHandler)
+       }
 
 }

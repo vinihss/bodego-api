@@ -1,15 +1,51 @@
-package customer
+
+package user
 
 import (
-	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"context"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type CustomerRepository interface {
-	Create(entity customer.Customer) (customer.Customer, error)
-	Delete(id uint) error
-	FindByID(id uint) (customer.Customer, error)
-	Update(entity customer.Customer) (customer.Customer, error)
-	FindAll(int, size int) ([]customer.Customer, error)
+
+type CreateUserInput struct {
+	Email    string
+	Password string
+	Role     Role
+}
+
+type CreateUserOutput struct {
+	ID    uint
+	Email string
+	Role  Role
+}
+
+type CreateUserUseCase struct {
+	Repo Repository
+}
+
+func NewCreateUserUseCase(repo Repository) *CreateUserUseCase {
+	return &CreateUserUseCase{Repo: repo}
+}
+
+func (uc *CreateUserUseCase) Execute(ctx context.Context, input CreateUserInput) (*CreateUserOutput, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+	user := &User{
+		Email:    input.Email,
+		Password: string(hash),
+		Role:     input.Role,
+	}
+	err = uc.Repo.Create(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	return &CreateUserOutput{
+		ID:    user.ID,
+		Email: user.Email,
+		Role:  user.Role,
+	}, nil
 }
 
 type CreateCustomerInput struct {
