@@ -7,11 +7,13 @@ import (
 	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
 	http_interfaces_authentication "github.com/vinihss/bodego-api/internal/interfaces/http/authentcation"
 	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
+	tabuse "github.com/vinihss/bodego-api/internal/usecases/tab"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	_ "github.com/vinihss/bodego-api/docs"
 	"github.com/vinihss/bodego-api/internal/interfaces/http/customer"
+	"github.com/vinihss/bodego-api/internal/interfaces/http/tab"
 	"github.com/vinihss/bodego-api/middlewares"
 )
 
@@ -25,7 +27,7 @@ func SetupRoutes(router *gin.Engine) {
 	authorized := router.Group("/")
 	authorized.Use(middlewares.JWTAuth())
 	{
-
+		// Customer routes
 		custRepo := repositories.NewCustomerRepository(db)
 		createCustomerUC := customeruse.NewCreateCustomerUseCase(custRepo)
 		deleteCustomerUC := customeruse.NewDeleteCustomerUseCase(custRepo)
@@ -36,6 +38,16 @@ func SetupRoutes(router *gin.Engine) {
 		custHandler := http_interfaces_customer.NewCustomerHandler(custController)
 		RegisterCustomerRoutes(router, custHandler)
 
-	}
+		// Tab routes
+		tabRepo := repositories.NewTabRepository(db)
+		openTabUC := tabuse.NewOpenTabUseCase(tabRepo)
+		closeTabUC := tabuse.NewCloseTabUseCase(tabRepo)
+		deleteTabUC := tabuse.NewDeleteTabUseCase(tabRepo)
+		findTabUC := tabuse.NewFindTabUseCase(tabRepo)
+		updateTabUC := tabuse.NewUpdateTabUseCase(tabRepo)
 
+		tabController := http_interfaces_tab.NewTabController(openTabUC, closeTabUC, deleteTabUC, findTabUC, updateTabUC)
+		tabHandler := http_interfaces_tab.NewTabHandler(tabController)
+		RegisterTabRoutes(router, tabHandler)
+	}
 }

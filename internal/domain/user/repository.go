@@ -1,8 +1,12 @@
 package user
 
+import "context"
+
 type Repository interface {
-	Create(f User) (User, error)
-	FindByID(id string) (*User, error)
-	Delete(id string) (*User, error)
-	Update(f User) (*User, error)
+	Create(ctx context.Context, user *User) error
+	FindByID(ctx context.Context, id uint) (*User, error)
+	FindByEmail(ctx context.Context, email string) (*User, error)
+	Update(ctx context.Context, user *User) error
+	Delete(ctx context.Context, id uint) error
+	List(ctx context.Context) ([]User, error)
 }
