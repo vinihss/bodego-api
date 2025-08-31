@@ -22,9 +22,14 @@ func NewServer(addr string) *Server {
 
 func (s *Server) Run() error {
 	config.ConnectDB()
-	err := config.DB.AutoMigrate(models.Customer{})
+	err := config.DB.AutoMigrate(models.Customer{}, models.Drink{})
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error migrating database: %v", err))
+	}
+
+	// Seed drinks
+	if err := models.SeedDrinks(config.DB); err != nil {
+		return errors.New(fmt.Sprintf("Error seeding drinks: %v", err))
 	}
 
 	// Set up Gin router
