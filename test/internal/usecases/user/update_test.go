@@ -8,22 +8,22 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/user"
 )
 
-type mockRepo struct {
+type mockUserRepoUpdate struct {
 	updated user.User
 	updateErr error
 }
 
-func (m *mockRepo) Create(entity user.User) (user.User, error) { return entity, nil }
-func (m *mockRepo) Delete(id uint) error { return nil }
-func (m *mockRepo) FindByID(id uint) (user.User, error) { return user.User{}, nil }
-func (m *mockRepo) Update(entity user.User) (user.User, error) {
+func (m *mockUserRepoUpdate) Create(entity user.User) (user.User, error) { return entity, nil }
+func (m *mockUserRepoUpdate) Delete(id uint) error { return nil }
+func (m *mockUserRepoUpdate) FindByID(id uint) (user.User, error) { return user.User{}, nil }
+func (m *mockUserRepoUpdate) Update(entity user.User) (user.User, error) {
 	m.updated = entity
 	return entity, m.updateErr
 }
-func (m *mockRepo) FindAll(int, int) ([]user.User, error) { return nil, nil }
+func (m *mockUserRepoUpdate) FindAll(int, int) ([]user.User, error) { return nil, nil }
 
 func TestUpdateUserUseCase_Execute(t *testing.T) {
-	repo := &mockRepo{}
+	repo := &mockUserRepoUpdate{}
 	usecase := uc.NewUpdateUserUseCase(repo)
 	input := uc.UpdateUserInput{ID: 1, Name: "User", Email: "user@email.com"}
 	result, err := usecase.Execute(input)
@@ -36,7 +36,7 @@ func TestUpdateUserUseCase_Execute(t *testing.T) {
 }
 
 func TestUpdateUserUseCase_Execute_Error(t *testing.T) {
-	repo := &mockRepo{updateErr: errors.New("erro ao atualizar")}
+	repo := &mockUserRepoUpdate{updateErr: errors.New("erro ao atualizar")}
 	usecase := uc.NewUpdateUserUseCase(repo)
 	input := uc.UpdateUserInput{ID: 2, Name: "User", Email: "user@email.com"}
 	_, err := usecase.Execute(input)

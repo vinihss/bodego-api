@@ -8,22 +8,22 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/product"
 )
 
-type mockRepo struct {
+type mockProductRepoUpdate struct {
 	updated product.Product
 	updateErr error
 }
 
-func (m *mockRepo) Create(entity product.Product) (product.Product, error) { return entity, nil }
-func (m *mockRepo) Delete(id uint) error { return nil }
-func (m *mockRepo) FindByID(id uint) (product.Product, error) { return product.Product{}, nil }
-func (m *mockRepo) Update(entity product.Product) (product.Product, error) {
+func (m *mockProductRepoUpdate) Create(entity product.Product) (product.Product, error) { return entity, nil }
+func (m *mockProductRepoUpdate) Delete(id uint) error { return nil }
+func (m *mockProductRepoUpdate) FindByID(id uint) (product.Product, error) { return product.Product{}, nil }
+func (m *mockProductRepoUpdate) Update(entity product.Product) (product.Product, error) {
 	m.updated = entity
 	return entity, m.updateErr
 }
-func (m *mockRepo) FindAll(int, int) ([]product.Product, error) { return nil, nil }
+func (m *mockProductRepoUpdate) FindAll(int, int) ([]product.Product, error) { return nil, nil }
 
 func TestUpdateProductUseCase_Execute(t *testing.T) {
-	repo := &mockRepo{}
+	repo := &mockProductRepoUpdate{}
 	usecase := uc.NewUpdateProductUseCase(repo)
 	input := uc.UpdateProductInput{ID: 1, Name: "Produto", Price: 10.0, Description: "desc"}
 	result, err := usecase.Execute(input)
@@ -36,7 +36,7 @@ func TestUpdateProductUseCase_Execute(t *testing.T) {
 }
 
 func TestUpdateProductUseCase_Execute_Error(t *testing.T) {
-	repo := &mockRepo{updateErr: errors.New("erro ao atualizar")}
+	repo := &mockProductRepoUpdate{updateErr: errors.New("erro ao atualizar")}
 	usecase := uc.NewUpdateProductUseCase(repo)
 	input := uc.UpdateProductInput{ID: 2, Name: "Produto", Price: 10.0, Description: "desc"}
 	_, err := usecase.Execute(input)

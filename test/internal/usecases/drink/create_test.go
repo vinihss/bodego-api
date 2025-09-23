@@ -8,22 +8,22 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/drink"
 )
 
-type mockRepo struct {
+type mockDrinkRepoCreate struct {
 	created drink.Drink
 	createErr error
 }
 
-func (m *mockRepo) Create(d drink.Drink) (drink.Drink, error) {
+func (m *mockDrinkRepoCreate) Create(d drink.Drink) (drink.Drink, error) {
 	m.created = d
 	return d, m.createErr
 }
-func (m *mockRepo) Delete(id uint) error { return nil }
-func (m *mockRepo) FindByID(id uint) (drink.Drink, error) { return drink.Drink{}, nil }
-func (m *mockRepo) Update(d drink.Drink) (*drink.Drink, error) { return &d, nil }
-func (m *mockRepo) FindAll() ([]drink.Drink, error) { return nil, nil }
+func (m *mockDrinkRepoCreate) Delete(id uint) error { return nil }
+func (m *mockDrinkRepoCreate) FindByID(id uint) (drink.Drink, error) { return drink.Drink{}, nil }
+func (m *mockDrinkRepoCreate) Update(d drink.Drink) (*drink.Drink, error) { return &d, nil }
+func (m *mockDrinkRepoCreate) FindAll() ([]drink.Drink, error) { return nil, nil }
 
 func TestCreateDrinkUseCase_Execute(t *testing.T) {
-	repo := &mockRepo{}
+	repo := &mockDrinkRepoCreate{}
 	usecase := uc.CreateDrinkUseCase{Repo: repo}
 	d := drink.Drink{ID: 1, Name: "Coca"}
 	result, err := usecase.Execute(d)
@@ -36,7 +36,7 @@ func TestCreateDrinkUseCase_Execute(t *testing.T) {
 }
 
 func TestCreateDrinkUseCase_Execute_Error(t *testing.T) {
-	repo := &mockRepo{createErr: errors.New("erro ao criar")}
+	repo := &mockDrinkRepoCreate{createErr: errors.New("erro ao criar")}
 	usecase := uc.CreateDrinkUseCase{Repo: repo}
 	d := drink.Drink{ID: 2, Name: "Pepsi"}
 	_, err := usecase.Execute(d)

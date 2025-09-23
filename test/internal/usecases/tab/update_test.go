@@ -8,22 +8,22 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/tab"
 )
 
-type mockRepo struct {
+type mockTabRepoUpdate struct {
 	updated tab.Tab
 	updateErr error
 }
 
-func (m *mockRepo) Create(entity tab.Tab) (tab.Tab, error) { return entity, nil }
-func (m *mockRepo) Delete(id uint) error { return nil }
-func (m *mockRepo) FindByID(id uint) (tab.Tab, error) { return tab.Tab{}, nil }
-func (m *mockRepo) Update(entity tab.Tab) (tab.Tab, error) {
+func (m *mockTabRepoUpdate) Create(entity tab.Tab) (tab.Tab, error) { return entity, nil }
+func (m *mockTabRepoUpdate) Delete(id uint) error { return nil }
+func (m *mockTabRepoUpdate) FindByID(id uint) (tab.Tab, error) { return tab.Tab{}, nil }
+func (m *mockTabRepoUpdate) Update(entity tab.Tab) (tab.Tab, error) {
 	m.updated = entity
 	return entity, m.updateErr
 }
-func (m *mockRepo) FindAll(int, int) ([]tab.Tab, error) { return nil, nil }
+func (m *mockTabRepoUpdate) FindAll(int, int) ([]tab.Tab, error) { return nil, nil }
 
 func TestUpdateTabUseCase_Execute(t *testing.T) {
-	repo := &mockRepo{}
+	repo := &mockTabRepoUpdate{}
 	usecase := uc.NewUpdateTabUseCase(repo)
 	input := uc.UpdateTabInput{ID: 1, Name: "Tab", Email: "tab@email.com"}
 	result, err := usecase.Execute(input)
@@ -36,7 +36,7 @@ func TestUpdateTabUseCase_Execute(t *testing.T) {
 }
 
 func TestUpdateTabUseCase_Execute_Error(t *testing.T) {
-	repo := &mockRepo{updateErr: errors.New("erro ao atualizar")}
+	repo := &mockTabRepoUpdate{updateErr: errors.New("erro ao atualizar")}
 	usecase := uc.NewUpdateTabUseCase(repo)
 	input := uc.UpdateTabInput{ID: 2, Name: "Tab", Email: "tab@email.com"}
 	_, err := usecase.Execute(input)

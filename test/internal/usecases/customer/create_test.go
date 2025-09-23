@@ -4,31 +4,30 @@ import (
 	"errors"
 	"reflect"
 	"testing"
-
-	"github.com/vinihss/bodego-api/internal/usecases/customer"
+	uc "github.com/vinihss/bodego-api/internal/usecases/customer"
 	"github.com/vinihss/bodego-api/internal/domain/customer"
 )
 
-type mockCustomerRepo struct {
+type mockCustomerRepoCreate struct {
 	created customer.Customer
 	createErr error
 }
 
-func (m *mockCustomerRepo) Create(entity customer.Customer) (customer.Customer, error) {
+func (m *mockCustomerRepoCreate) Create(entity customer.Customer) (customer.Customer, error) {
 	m.created = entity
 	return entity, m.createErr
 }
-func (m *mockCustomerRepo) Delete(id uint) error { return nil }
-func (m *mockCustomerRepo) FindByID(id uint) (customer.Customer, error) { return customer.Customer{}, nil }
-func (m *mockCustomerRepo) Update(entity customer.Customer) (customer.Customer, error) { return entity, nil }
-func (m *mockCustomerRepo) FindAll(int, int) ([]customer.Customer, error) { return nil, nil }
+func (m *mockCustomerRepoCreate) Delete(id uint) error { return nil }
+func (m *mockCustomerRepoCreate) FindByID(id uint) (customer.Customer, error) { return customer.Customer{}, nil }
+func (m *mockCustomerRepoCreate) Update(entity customer.Customer) (customer.Customer, error) { return entity, nil }
+func (m *mockCustomerRepoCreate) FindAll(int, int) ([]customer.Customer, error) { return nil, nil }
 
 func TestCreateCustomerUseCase_Execute(t *testing.T) {
-	repo := &mockCustomerRepo{}
-	uc := customer.NewCreateCustomerUseCase(repo)
-	input := customer.CreateCustomerInput{Name: "João", Email: "joao@email.com"}
+	repo := &mockCustomerRepoCreate{}
+	usecase := uc.NewCreateCustomerUseCase(repo)
+	input := uc.CreateCustomerInput{Name: "João", Email: "joao@email.com"}
 
-	result, err := uc.Execute(input)
+	result, err := usecase.Execute(input)
 	if err != nil {
 		t.Fatalf("esperado erro nulo, recebeu: %v", err)
 	}
@@ -38,11 +37,11 @@ func TestCreateCustomerUseCase_Execute(t *testing.T) {
 }
 
 func TestCreateCustomerUseCase_Execute_Error(t *testing.T) {
-	repo := &mockCustomerRepo{createErr: errors.New("erro ao criar")}
-	uc := customer.NewCreateCustomerUseCase(repo)
-	input := customer.CreateCustomerInput{Name: "Maria", Email: "maria@email.com"}
+	repo := &mockCustomerRepoCreate{createErr: errors.New("erro ao criar")}
+	usecase := uc.NewCreateCustomerUseCase(repo)
+	input := uc.CreateCustomerInput{Name: "Maria", Email: "maria@email.com"}
 
-	_, err := uc.Execute(input)
+	_, err := usecase.Execute(input)
 	if err == nil {
 		t.Error("esperado erro, recebeu nil")
 	}
