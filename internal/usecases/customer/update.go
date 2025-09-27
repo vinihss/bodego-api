@@ -4,8 +4,8 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/customer"
 )
 
-type UpdateCustomerUseCase struct {
-	repo CustomerRepository
+type UpdateCustomer struct {
+	repo customer.Repository
 }
 type UpdateCustomerInput struct {
 	ID    uint
@@ -13,11 +13,11 @@ type UpdateCustomerInput struct {
 	Email string
 }
 
-func NewUpdateCustomerUseCase(repo CustomerRepository) *UpdateCustomerUseCase {
-	return &UpdateCustomerUseCase{repo: repo}
+func NewUpdateCustomer(repo customer.Repository) *UpdateCustomer {
+	return &UpdateCustomer{repo: repo}
 }
 
-func (uc *UpdateCustomerUseCase) Execute(input UpdateCustomerInput) (customer.Customer, error) {
+func (uc *UpdateCustomer) Execute(input UpdateCustomerInput) (customer.Customer, error) {
 	fav := customer.Customer{
 		ID:    input.ID,
 		Name:  input.Name,

@@ -1,43 +1,42 @@
-
 package user
 
 import (
-	"context"
+	"github.com/vinihss/bodego-api/internal/domain/user"
 	"golang.org/x/crypto/bcrypt"
 )
 
-
 type CreateUserInput struct {
+	Name     string
 	Email    string
 	Password string
-	Role     Role
+	Role     user.Role
 }
 
 type CreateUserOutput struct {
 	ID    uint
 	Email string
-	Role  Role
+	Role  user.Role
 }
 
-type CreateUserUseCase struct {
-	Repo Repository
+type CreateUser struct {
+	Repo user.Repository
 }
 
-func NewCreateUserUseCase(repo Repository) *CreateUserUseCase {
-	return &CreateUserUseCase{Repo: repo}
+func NewCreateUser(repo user.Repository) *CreateUser {
+	return &CreateUser{Repo: repo}
 }
 
-func (uc *CreateUserUseCase) Execute(ctx context.Context, input CreateUserInput) (*CreateUserOutput, error) {
+func (uc *CreateUser) Execute(input CreateUserInput) (*CreateUserOutput, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
-	user := &User{
+	user := &user.User{
 		Email:    input.Email,
 		Password: string(hash),
 		Role:     input.Role,
 	}
-	err = uc.Repo.Create(ctx, user)
+	err = uc.Repo.Create(user)
 	if err != nil {
 		return nil, err
 	}
@@ -46,25 +45,4 @@ func (uc *CreateUserUseCase) Execute(ctx context.Context, input CreateUserInput)
 		Email: user.Email,
 		Role:  user.Role,
 	}, nil
-}
-
-type CreateCustomerInput struct {
-	Name  string
-	Email string
-}
-
-type CreateCustomerUseCase struct {
-	repo CustomerRepository
-}
-
-func NewCreateCustomerUseCase(repo CustomerRepository) *CreateCustomerUseCase {
-	return &CreateCustomerUseCase{repo: repo}
-}
-
-func (uc *CreateCustomerUseCase) Execute(input CreateCustomerInput) (customer.Customer, error) {
-	fav := customer.Customer{
-		Name:  input.Name,
-		Email: input.Email,
-	}
-	return uc.repo.Create(fav)
 }

@@ -1,10 +1,21 @@
 package customer
 
-import "github.com/vinihss/bodego-api/internal/domain"
+type Infos interface {
+	GetName() string
+	GetEmail() string
+}
 
 type Customer struct {
-	domain.Entity
 	ID    uint
 	Name  string
 	Email string
+}
+
+// Implementação dos métodos da interface
+func (c Customer) GetName() string {
+	return c.Name
+}
+
+func (c Customer) GetEmail() string {
+	return c.Email
 }

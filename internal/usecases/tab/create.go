@@ -1,20 +1,11 @@
 package tab
 
 import (
-	"time"
 	"errors"
 	"github.com/vinihss/bodego-api/internal/domain/tab"
+	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
+	"time"
 )
-
-type TabRepository interface {
-	Create(entity tab.Tab) (tab.Tab, error)
-	Delete(id uint) error
-	FindByID(id uint) (tab.Tab, error)
-	Update(entity tab.Tab) (tab.Tab, error)
-	FindAll(offset, size int) ([]tab.Tab, error)
-	FindByUserID(userID uint) ([]tab.Tab, error)
-	FindOpenTabsByUserID(userID uint) ([]tab.Tab, error)
-}
 
 type OpenTabInput struct {
 	UserID      uint   `json:"user_id" binding:"required"`
@@ -22,10 +13,10 @@ type OpenTabInput struct {
 }
 
 type OpenTabUseCase struct {
-	repo TabRepository
+	repo tab.Repository
 }
 
-func NewOpenTabUseCase(repo TabRepository) *OpenTabUseCase {
+func NewOpenTab(repo tab.Repository) *OpenTabUseCase {
 	return &OpenTabUseCase{repo: repo}
 }
 
@@ -57,16 +48,16 @@ type CreateTabInput struct {
 	Email string
 }
 
-type CreateTabUseCase struct {
-	repo TabRepository
+type CreateTab struct {
+	repo tab.Repository
 }
 
-func NewCreateTabUseCase(repo TabRepository) *CreateTabUseCase {
-	return &CreateTabUseCase{repo: repo}
+func NewCreateTab(repo repositories.TabRepository) *CreateTab {
+	return &CreateTab{repo: repo}
 }
 
 // Deprecated: Use OpenTabUseCase instead
-func (uc *CreateTabUseCase) Execute(input CreateTabInput) (tab.Tab, error) {
+func (uc *CreateTab) Execute(input CreateTabInput) (tab.Tab, error) {
 	// This is kept for backward compatibility but should not be used
 	return tab.Tab{}, errors.New("deprecated: use OpenTabUseCase instead")
 }

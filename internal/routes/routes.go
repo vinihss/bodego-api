@@ -5,14 +5,14 @@ import (
 	"github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/vinihss/bodego-api/config"
+	_ "github.com/vinihss/bodego-api/docs"
+	"github.com/vinihss/bodego-api/internal/domain/customer"
+	"github.com/vinihss/bodego-api/internal/domain/tab"
+
 	"github.com/vinihss/bodego-api/internal/infrastructure/database/repositories"
 	http_interfaces_authentication "github.com/vinihss/bodego-api/internal/interfaces/http/authentcation"
-	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
-	newsuse "github.com/vinihss/bodego-api/internal/usecases/news"
-
-	_ "github.com/vinihss/bodego-api/docs"
 	"github.com/vinihss/bodego-api/internal/interfaces/http/customer"
-	"github.com/vinihss/bodego-api/internal/interfaces/http/news"
+	customeruse "github.com/vinihss/bodego-api/internal/usecases/customer"
 	"github.com/vinihss/bodego-api/middlewares"
 )
 
@@ -26,34 +26,24 @@ func SetupRoutes(router *gin.Engine) {
 	authorized.Use(middlewares.JWTAuth())
 	{
 
-		custRepo := repositories.NewCustomerRepository(config.DB)
-		createCustomerUC := customeruse.NewCreateCustomerUseCase(custRepo)
-		deleteCustomerUC := customeruse.NewDeleteCustomerUseCase(custRepo)
-		findCustomerUC := customeruse.NewFindCustomerUseCase(custRepo)
-		updateCustomerUC := customeruse.NewUpdateCustomerUseCase(custRepo)
+		var customerRepository customer.Repository = repositories.NewCustomerRepository(config.DB)
+		createCustomerUC := customeruse.NewCreateCustomer(customerRepository)
+		deleteCustomerUC := customeruse.NewDeleteCustomer(customerRepository)
+		findCustomerUC := customeruse.NewFindCustomer(customerRepository)
+		updateCustomerUC := customeruse.NewUpdateCustomer(customerRepository)
 
 		custController := http_interfaces_customer.NewCustomerController(createCustomerUC, deleteCustomerUC, findCustomerUC, updateCustomerUC)
 		custHandler := http_interfaces_customer.NewCustomerHandler(custController)
 		RegisterCustomerRoutes(router, custHandler)
-
-		// News routes
-		newsRepo := repositories.NewNewsRepository(config.DB)
-		createNewsUC := newsuse.NewCreateNewsUseCase(newsRepo)
-		deleteNewsUC := newsuse.NewDeleteNewsUseCase(newsRepo)
-		findNewsUC := newsuse.NewFindNewsUseCase(newsRepo)
-		updateNewsUC := newsuse.NewUpdateNewsUseCase(newsRepo)
-
-		newsController := http_interfaces_news.NewNewsController(createNewsUC, deleteNewsUC, findNewsUC, updateNewsUC)
-		newsHandler := http_interfaces_news.NewNewsHandler(newsController)
-		RegisterNewsRoutes(router, newsHandler)
-
+		var tabRepository tab.Repository = repositories.NewTabRepository(config.DB)
+		var createTab = tab.NewCreateTab(tabRepository)
 		// User CRUD (apenas sysadmin)
-		userRepo := repositories.NewUserRepository(db)
-		userCreateUC := userUse.NewCreateUserUseCase(userRepo)
+		/*var userRepository user.Repository = repositories.NewUserRepository(config.DB)
+		var userCreateUC = useruse.NewCreateUser(userRepository)
 		userHandler := http_interfaces_user.NewHandler(userCreateUC)
 		userGroup := authorized.Group("")
 		userGroup.Use(middlewares.OnlySysAdmin())
-		http_interfaces_user.RegisterUserRoutes(userGroup, userHandler)
+		http_interfaces_user.RegisterUserRoutes(userGroup, userHandler)*/
 	}
 
 }

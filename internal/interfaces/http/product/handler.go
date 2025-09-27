@@ -24,6 +24,7 @@ func NewProductHandler(controller *ProductController) *ProductHandler {
 // @Param product body CreateProductRequest true "Product data"
 // @Success 200 {object} ProductResponse
 // @Failure 400 {object} map[string]string
+// @Router /product/{id} [post]
 func (h *ProductHandler) Create(c *gin.Context) {
 	var req CreateProductRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

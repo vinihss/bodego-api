@@ -1,17 +1,31 @@
 package customer
 
-type DeleteCustomerUseCase struct {
-	repo CustomerRepository
+import (
+	"github.com/vinihss/bodego-api/internal/domain/customer"
+)
+
+type DeleteCustomer struct {
+	repo customer.Repository
 }
 
-func NewDeleteCustomerUseCase(repo CustomerRepository) *DeleteCustomerUseCase {
-	return &DeleteCustomerUseCase{repo: repo}
+type DeleteCustomerInput struct {
+	ID    uint
+	Name  string
+	Email string
 }
 
-func (uc *DeleteCustomerUseCase) Execute(id uint) error {
-	entity, err := uc.repo.FindByID(id)
+func NewDeleteCustomer(repo customer.Repository) *DeleteCustomer {
+	return &DeleteCustomer{repo: repo}
+}
+
+func (uc *DeleteCustomer) Execute(input DeleteCustomerInput) error {
+	entity, err := uc.repo.FindByID(input.ID)
 	if err != nil {
 		return err
 	}
-	return uc.repo.Delete(entity.ID)
+
+	if uc.repo.Delete(entity.ID) != nil {
+		return err
+	}
+	return nil
 }

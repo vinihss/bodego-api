@@ -46,41 +46,6 @@ definitions:
         minLength: 2
         type: string
     type: object
-  http_interfaces_news.CreateNewsRequest:
-    properties:
-      description:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-    required:
-    - name
-    - price
-    type: object
-  http_interfaces_news.NewsResponse:
-    properties:
-      description:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      price:
-        type: number
-    type: object
-  http_interfaces_news.UpdateNewsRequest:
-    properties:
-      description:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-    required:
-    - name
-    - price
-    type: object
   http_interfaces_product.CreateProductRequest:
     properties:
       description:
@@ -121,36 +86,33 @@ definitions:
         minimum: 0
         type: number
     type: object
-  http_interfaces_tab.CreateTabRequest:
+  http_interfaces_tab.OpenTabRequest:
     properties:
-      email:
-        maxLength: 254
+      description:
         type: string
-      name:
-        maxLength: 100
-        minLength: 2
-        type: string
+      user_id:
+        type: integer
     required:
-    - email
-    - name
+    - user_id
     type: object
   http_interfaces_tab.TabResponse:
     properties:
-      email:
+      close_date:
+        type: string
+      description:
         type: string
       id:
         type: integer
-      name:
+      open_date:
         type: string
+      status:
+        type: string
+      user_id:
+        type: integer
     type: object
   http_interfaces_tab.UpdateTabRequest:
     properties:
-      email:
-        maxLength: 254
-        type: string
-      name:
-        maxLength: 100
-        minLength: 2
+      description:
         type: string
     type: object
 info:
@@ -387,198 +349,6 @@ paths:
       summary: Update customer
       tags:
       - Customer
-  /news:
-    get:
-      consumes:
-      - application/json
-      description: Retrieves a paginated list of news items
-      parameters:
-      - description: Page number
-        in: query
-        name: page
-        type: integer
-      - description: Page size
-        in: query
-        name: size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/http_interfaces_news.NewsResponse'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Get all news items
-      tags:
-      - News
-    post:
-      consumes:
-      - application/json
-      description: Creates a news item
-      parameters:
-      - description: News data
-        in: body
-        name: news
-        required: true
-        schema:
-          $ref: '#/definitions/http_interfaces_news.CreateNewsRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http_interfaces_news.NewsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Add news item
-      tags:
-      - News
-  /news/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Deletes a news item by ID
-      parameters:
-      - description: News ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Delete news item
-      tags:
-      - News
-    get:
-      consumes:
-      - application/json
-      description: Retrieves a news item by ID
-      parameters:
-      - description: News ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http_interfaces_news.NewsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Get news item by ID
-      tags:
-      - News
-    put:
-      consumes:
-      - application/json
-      description: Updates a news item by ID
-      parameters:
-      - description: News ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Updated news data
-        in: body
-        name: news
-        required: true
-        schema:
-          $ref: '#/definitions/http_interfaces_news.UpdateNewsRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http_interfaces_news.NewsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Update news item
-      tags:
-      - News
   /product:
     get:
       consumes:
@@ -779,23 +549,29 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a favorite for a given tab and product
+      description: Opens a new tab for a user
       parameters:
       - description: Tab data
         in: body
-        name: favorite
+        name: tab
         required: true
         schema:
-          $ref: '#/definitions/http_interfaces_tab.CreateTabRequest'
+          $ref: '#/definitions/http_interfaces_tab.OpenTabRequest'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/http_interfaces_tab.TabResponse'
         "400":
           description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
           schema:
             additionalProperties:
               type: string
@@ -808,14 +584,14 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Add tab product
+      summary: Open a new tab
       tags:
       - Tab
   /tab/{id}:
     delete:
       consumes:
       - application/json
-      description: Deletes a tab by their ID
+      description: Deletes a tab by its ID
       parameters:
       - description: Tab ID
         in: path
@@ -837,6 +613,12 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
@@ -851,7 +633,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieves a tab's information by their ID
+      description: Retrieves a tab's information by its ID
       parameters:
       - description: Tab ID
         in: path
@@ -891,7 +673,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Updates a tab's information by their ID
+      description: Updates a tab's description by its ID
       parameters:
       - description: Tab ID
         in: path
@@ -917,6 +699,18 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
@@ -926,6 +720,127 @@ paths:
       security:
       - BearerAuth: []
       summary: Update tab
+      tags:
+      - Tab
+  /tab/{id}/close:
+    put:
+      consumes:
+      - application/json
+      description: Closes an open tab by its ID
+      parameters:
+      - description: Tab ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http_interfaces_tab.TabResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Close a tab
+      tags:
+      - Tab
+  /tab/user/{user_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all tabs for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/http_interfaces_tab.TabResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get tabs by user ID
+      tags:
+      - Tab
+  /tab/user/{user_id}/open:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all open tabs for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/http_interfaces_tab.TabResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get open tabs by user ID
       tags:
       - Tab
 securityDefinitions:

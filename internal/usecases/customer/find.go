@@ -4,15 +4,15 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/customer"
 )
 
-type FindCustomerUseCase struct {
-	repo CustomerRepository
+type FindCustomer struct {
+	repo customer.Repository
 }
 
-func NewFindCustomerUseCase(repo CustomerRepository) *FindCustomerUseCase {
-	return &FindCustomerUseCase{repo: repo}
+func NewFindCustomer(repo customer.Repository) *FindCustomer {
+	return &FindCustomer{repo: repo}
 }
 
-func (uc *FindCustomerUseCase) Execute(id uint) (customer.Customer, error) {
+func (uc *FindCustomer) Execute(id uint) (customer.Customer, error) {
 	entity, err := uc.repo.FindByID(id)
 	if err != nil {
 		return entity, err
@@ -20,7 +20,7 @@ func (uc *FindCustomerUseCase) Execute(id uint) (customer.Customer, error) {
 	return entity, nil
 }
 
-func (uc *FindCustomerUseCase) ExecuteAll(page, size int) ([]customer.Customer, error) {
+func (uc *FindCustomer) ExecuteAll(page, size int) ([]customer.Customer, error) {
 	offset := (page - 1) * size
 	customers, err := uc.repo.FindAll(offset, size)
 	if err != nil {

@@ -2,7 +2,8 @@ package customer
 
 type Repository interface {
 	Create(f Customer) (Customer, error)
-	FindByID(id string) (*Customer, error)
-	Delete(id string) (*Customer, error)
-	Update(f Customer) (*Customer, error)
+	FindByID(id uint) (Customer, error)
+	Delete(id uint) error
+	Update(f Customer) (Customer, error)
+	FindAll(int, size int) ([]Customer, error)
 }

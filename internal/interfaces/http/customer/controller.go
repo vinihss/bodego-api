@@ -5,17 +5,17 @@ import (
 )
 
 type CustomerController struct {
-	createUC *customer.CreateCustomerUseCase
-	deleteUC *customer.DeleteCustomerUseCase
-	findUC   *customer.FindCustomerUseCase
-	updateUC *customer.UpdateCustomerUseCase
+	createUC *customer.CreateCustomer
+	deleteUC *customer.DeleteCustomer
+	findUC   *customer.FindCustomer
+	updateUC *customer.UpdateCustomer
 }
 
 func NewCustomerController(
-	createUC *customer.CreateCustomerUseCase,
-	deleteUC *customer.DeleteCustomerUseCase,
-	findUC *customer.FindCustomerUseCase,
-	updateUC *customer.UpdateCustomerUseCase,
+	createUC *customer.CreateCustomer,
+	deleteUC *customer.DeleteCustomer,
+	findUC *customer.FindCustomer,
+	updateUC *customer.UpdateCustomer,
 ) *CustomerController {
 	return &CustomerController{createUC: createUC, deleteUC: deleteUC, findUC: findUC, updateUC: updateUC}
 }
@@ -50,7 +50,7 @@ func (ctrl *CustomerController) GetCustomer(id uint) (CustomerResponse, error) {
 }
 
 func (ctrl *CustomerController) DeleteCustomer(id uint) error {
-	err := ctrl.deleteUC.Execute(id)
+	err := ctrl.deleteUC.Execute(customer.DeleteCustomerInput{ID: id})
 	if err != nil {
 		return err
 	}

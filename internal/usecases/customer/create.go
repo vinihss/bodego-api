@@ -4,28 +4,19 @@ import (
 	"github.com/vinihss/bodego-api/internal/domain/customer"
 )
 
-type CustomerRepository interface {
-	Create(entity customer.Customer) (customer.Customer, error)
-	Delete(id uint) error
-	FindByID(id uint) (customer.Customer, error)
-	Update(entity customer.Customer) (customer.Customer, error)
-	FindAll(int, size int) ([]customer.Customer, error)
+type CreateCustomer struct {
+	repo customer.Repository
 }
-
 type CreateCustomerInput struct {
 	Name  string
 	Email string
 }
 
-type CreateCustomerUseCase struct {
-	repo CustomerRepository
+func NewCreateCustomer(repo customer.Repository) *CreateCustomer {
+	return &CreateCustomer{repo: repo}
 }
 
-func NewCreateCustomerUseCase(repo CustomerRepository) *CreateCustomerUseCase {
-	return &CreateCustomerUseCase{repo: repo}
-}
-
-func (uc *CreateCustomerUseCase) Execute(input CreateCustomerInput) (customer.Customer, error) {
+func (uc *CreateCustomer) Execute(input CreateCustomerInput) (customer.Customer, error) {
 	fav := customer.Customer{
 		Name:  input.Name,
 		Email: input.Email,
