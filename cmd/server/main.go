@@ -22,30 +22,9 @@ func NewServer(addr string) *Server {
 
 func (s *Server) Run() error {
 	config.ConnectDB()
-	err := config.DB.AutoMigrate(models.Customer{}, models.News{})
+	err := config.DB.AutoMigrate(models.Customer{})
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error migrating database: %v", err))
-	}
-
-	// Seed default news data if the table is empty
-	var count int64
-	config.DB.Model(&models.News{}).Count(&count)
-	if count == 0 {
-		defaultNews := []models.News{
-			{
-				Name:        "Cerveja Heineken Latão",
-				Price:       10.00,
-				Description: "Cerveja Heineken em lata",
-			},
-			{
-				Name:        "Dose cachaça",
-				Price:       4.00,
-				Description: "Dose de cachaça",
-			},
-		}
-		for _, news := range defaultNews {
-			config.DB.Create(&news)
-		}
 	}
 
 	// Set up Gin router

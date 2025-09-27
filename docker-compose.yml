@@ -23,7 +23,12 @@ services:
       - postgres
       - redis
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/bodego?sslmode=disable
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=bodego
+      - DB_SSLMODE=disable
       - REDIS_ADDR=redis:6379
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
       - PRODUCT_SERVICE_URL=http://product-service:8080
